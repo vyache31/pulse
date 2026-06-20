@@ -41,7 +41,7 @@ class User extends Authenticatable
 
     public function ownedWorkspaces(): HasMany
     {
-	return $this->hasMany(Workspace::class, 'owner_id'));
+	return $this->hasMany(Workspace::class, 'owner_id');
     }
 
     public function workspaces(): BelongsToMany

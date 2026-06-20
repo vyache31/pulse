@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\WorkspaceMember;
+use App\Models\User;
+use App\Models\Column;
 
 class Workspace extends Model
 {

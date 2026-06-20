@@ -3,13 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use App\Models\WorkspaceMember;
 use App\Models\User;
 use App\Models\Column;
+use App\Models\Task;
 
 class Workspace extends Model
 {
-    protected $fillable = ['title', 'owner_id'];
+    protected $fillable = ['name', 'owner_id'];
 
     public function owner(): BelongsTo
     {
@@ -31,5 +35,10 @@ class Workspace extends Model
     public function columns(): HasMany
     {
 	return $this->hasMany(Column::class);
+    }
+
+    public function tasks(): HasManyThrough 
+    {
+	return $this->hasManyThrough(Task::class, Column::class);
     }
 }

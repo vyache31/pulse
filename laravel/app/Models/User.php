@@ -9,7 +9,12 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Enums\Role;
+use App\Models\Workspace;
+use App\Models\WorkspaceMember;
+use App\Models\Task;
 
 class User extends Authenticatable
 {
@@ -50,7 +55,7 @@ class User extends Authenticatable
 	return $this->hasMany(WorkspaceMember::class);
     }
 
-    public function task(): HasMany
+    public function tasks(): HasMany
     {
 	return $this->hasMany(Task::class, 'assigned_to')->latest();
     }

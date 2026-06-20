@@ -4,7 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Workspace;
-use App\Enums\Role;
+use App\Models\WorkspaceMember;
+use App\Enums\UserRole;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -22,12 +23,14 @@ class DatabaseSeeder extends Seeder
         $user = User::factory()->create([
             'username' => 'admin',
             'email' => 'admin@example.com',
-	    'role' => Role::ADMIN,
+	    'role' => UserRole::ADMIN,
 	    'password' => 'password',
         ]);
 
-	Workspace::factory()->forUser($user)->create([
-	    'title' => 'My workspace'
+	$workspace = Workspace::factory()->forUser($user)->create([
+	    'name' => 'My workspace'
 	]);
+
+	WorkspaceMember::factory()->forOwnerUser($user)->forWorkspace($workspace)->create();
     }
 }

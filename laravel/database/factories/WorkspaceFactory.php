@@ -19,7 +19,7 @@ class WorkspaceFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => fake()->words(2, true),
+            'name' => fake()->words(2, true),
 	    'owner_id' => User::factory(),
         ];
     }

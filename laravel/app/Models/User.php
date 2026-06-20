@@ -11,7 +11,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use App\Enums\Role;
+use App\Enums\UserRole;
 use App\Models\Workspace;
 use App\Models\WorkspaceMember;
 use App\Models\Task;
@@ -35,7 +35,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
- 	    'role' => Role::class,
+ 	    'role' => UserRole::class,
         ];
     }
 

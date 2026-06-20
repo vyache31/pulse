@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-	    $table->foreingId('column_id')->constrained();
+	    $table->foreignId('column_id')->constrained();
 	    $table->string('title');
 	    $table->string('description');
 	    $table->json('tags')->nullable();

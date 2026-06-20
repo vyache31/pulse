@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('workspace_members', function (Blueprint $table) {
             $table->id();
 	    $table->foreignId('workspace_id')->constrained();
-	    $table->foreingId('user_id')->constrained();
+	    $table->foreignId('user_id')->constrained();
 	    $table->enum('role', ['member', 'owner', 'admin'])->default('member');
             $table->timestamps();
         });

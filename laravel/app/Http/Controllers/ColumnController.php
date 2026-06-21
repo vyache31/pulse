@@ -64,7 +64,7 @@ class ColumnController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Column $column)
+    public function update(Request $request, Workspace $workspace, Column $column)
     {
 		$this->authorize('update', $column);
         $data = $request->validate([

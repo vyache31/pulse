@@ -8,14 +8,37 @@
 
         <div class="kanban-column">
 
-            <h5 class="mb-3">{{ $column->title }}</h5>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+    			<h5 class="mb-0">{{ $column->title }}</h5>
+
+    			<button
+        			class="btn btn-sm"
+        			data-bs-toggle="modal"
+        			data-bs-target="#editColumnModal{{ $column->id }}"
+    			>
+        			⚙
+    			</button>
+			</div>
 
             @foreach($column->tasks as $task)
 
                 <div class="task-card">
-                    {{ $task->title }}
-                </div>
 
+    				<div class="d-flex justify-content-between">
+
+        			<span>{{ $task->title }}</span>
+
+        			<button
+            			class="btn btn-sm btn-link text-light p-0"
+            			data-bs-toggle="modal"
+            			data-bs-target="#editTaskModal{{ $task->id }}"
+        			>
+            			⚙
+        			</button>
+
+    				</div>
+
+				</div>
             @endforeach
 
             <button
@@ -29,8 +52,62 @@
 
         </div>
 
-    @endforeach
+		<div
+    		class="modal fade"
+    		id="editColumnModal{{ $column->id }}"
+    		tabindex="-1"
+		>
 
+    		<div class="modal-dialog">
+
+        		<div class="modal-content bg-dark text-white">
+
+            		<form
+                		method="POST"
+                		action="{{ route('workspaces.columns.update', [$workspace, $column]) }}"
+            		>
+                		@csrf
+                		@method('PATCH')
+
+                		<div class="modal-header">
+                    		<h5>Изменить колонку</h5>
+                		</div>
+
+                		<div class="modal-body">
+
+                    		<input
+                        		type="text"
+                        		name="title"
+                        		class="form-control"
+                        		value="{{ $column->title }}"
+                        		required
+                    		>
+
+                		</div>
+
+                		<div class="modal-footer">
+
+                    		<button
+                        	type="submit"
+                        	class="btn btn-primary"
+                    		>
+                        		Сохранить
+                    		</button>
+
+                		</div>
+
+            		</form>
+
+        		</div>
+
+    		</div>
+
+		</div>
+
+    @endforeach
+		
+	
+	
     <button
         class="add-column-card"
         data-bs-toggle="modal"
@@ -53,7 +130,7 @@
 
         <div class="modal-content bg-dark text-white">
 
-            <form method="POST" action="{{ route('workspaces.tasks.store', $workspace) }}">
+            <form method="POST" action="{{ route('tasks.store') }}">
 
                 @csrf
 
@@ -86,6 +163,58 @@
                         placeholder="Название задачи"
                         required
                     >
+
+					<div class="mb-3">
+
+    				<label class="form-label">Описание</label>
+
+    					<textarea
+        					name="description"
+        					class="form-control"
+       						rows="3"
+    					></textarea>
+
+					</div>
+
+					<div class="mb-3">
+
+    					<label class="form-label">Теги</label>
+
+    						<input
+        						type="text"
+        						name="tags"
+        						class="form-control"
+        						placeholder="bug, backend, urgent"
+    						>
+
+					</div>
+
+					<div class="mb-3">
+
+    					<label class="form-label">
+       						Исполнитель
+    					</label>
+
+    					<select
+        					name="assignee_id"
+        					class="form-select"
+    					>
+
+        					<option value="">
+            						Не назначен
+        					</option>
+
+        					@foreach($workspace->users as $user)
+
+            					<option value="{{ $user->id }}">
+                					{{ $user->username }}
+            					</option>
+
+        					@endforeach
+
+    					</select>
+
+					</div>
 
                 </div>
 

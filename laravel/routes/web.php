@@ -5,10 +5,15 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WorkspaceController;
 use App\Http\Controllers\ColumnController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\Auth\GitHubController;
 
 Route::get('/', function () {
     return view('layouts/public');
 })->name('public');
+
+Route::get('/auth/github', [GitHubController::class, 'redirect'])
+	->name('auth.github');
+Route::get('/auth/github/callback', [GitHubController::class, 'callback']);
 
 
 Route::middleware('auth')->group(function () {

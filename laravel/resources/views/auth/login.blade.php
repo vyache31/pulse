@@ -47,5 +47,18 @@
                 {{ __('Log in') }}
             </x-primary-button>
         </div>
+
+		 <div class="mt-6 w-full">
+            <a href="{{ route('auth.github') }}"
+   				style="width:100%;display:flex;align-items:center;justify-content:center;
+          		gap:8px;padding:10px;border-radius:6px;
+          		background:#000;color:#fff;text-decoration:none;
+          		box-shadow:0 2px 8px rgba(0,0,0,0.2);">
+    		<img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/github-white-icon.png"
+         		style="width:20px;height:20px;">
+
+    			Войти через GitHub
+	    	</a> 
+        </div>
     </form>
 </x-guest-layout>

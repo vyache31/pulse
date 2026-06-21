@@ -20,7 +20,7 @@ Route::middleware('auth')->group(function () {
     	return view('layouts/app');
 	})->name('app');
 	Route::resource('workspaces.columns', ColumnController::class);
-	Route::resource('workspaces.tasks', TaskController::class);
+	Route::resource('workspaces.columns.tasks', TaskController::class);
 });
 
 require __DIR__.'/auth.php';

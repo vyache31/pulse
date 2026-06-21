@@ -15,6 +15,7 @@ use App\Enums\UserRole;
 use App\Models\Workspace;
 use App\Models\WorkspaceMember;
 use App\Models\Task;
+use App\Enums\WorkspaceMemberRole;
 
 class User extends Authenticatable
 {
@@ -35,28 +36,42 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
- 	    'role' => UserRole::class,
+ 	    	'role' => UserRole::class,
         ];
     }
 
+	public function isAdmin(): bool
+	{
+		return $this->role === UserRole::ADMIN;
+	}
+
     public function ownedWorkspaces(): HasMany
     {
-	return $this->hasMany(Workspace::class, 'owner_id');
+		return $this->hasMany(Workspace::class, 'owner_id');
     }
 
     public function workspaces(): BelongsToMany
     {
-	return $this->belongsToMany(Workspace::class, 'workspace_members')
-		->withPivot('role')->withTimestamps();
+		return $this->belongsToMany(Workspace::class, 'workspace_members')
+			->withPivot('role')->withTimestamps();
     }
+
+	public function roleInWorkspace(Workspace $workspace): ?WorkspaceMemberRole
+	{
+		$member = $this->workspaceMembers()
+			->where('workspace_id', $workspace->id)
+			->first();
+
+		return $member?->role;
+	}
 
     public function workspaceMembers(): HasMany
     {
-	return $this->hasMany(WorkspaceMember::class);
+		return $this->hasMany(WorkspaceMember::class);
     }
 
     public function tasks(): HasMany
     {
-	return $this->hasMany(Task::class, 'assigned_to')->latest();
+		return $this->hasMany(Task::class, 'assigned_to')->latest();
     }
 }

@@ -28,8 +28,8 @@
 1. Laravel
 	1. [x] Модели и миграции
 	2. [ ] Аутентификация (Breeze + Socialite)
-	3. [ ] CRUD (Controllers + Policy)
-		1. [ ] Workspaces
+	3. [x] CRUD (Controllers + Policy)
+		1. [x] Workspaces
 		2. [ ] Columns
 		3. [ ] Tasks
 	4. [x] Сидер (с админом + пользователем)

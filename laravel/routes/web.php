@@ -19,8 +19,8 @@ Route::middleware('auth')->group(function () {
 	Route::get('/home', function () {
     	return view('layouts/app');
 	})->name('app');
-	Route::resource('columns', ColumnController::class);
-	Route::resource('tasks', TaskController::class);
+	Route::resource('workspaces.columns', ColumnController::class);
+	Route::resource('workspaces.tasks', TaskController::class);
 });
 
 require __DIR__.'/auth.php';

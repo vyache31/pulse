@@ -53,7 +53,7 @@
 
         <div class="modal-content bg-dark text-white">
 
-            <form method="POST" action="{{ route('tasks.store') }}">
+            <form method="POST" action="{{ route('workspaces.tasks.store', $workspace) }}">
 
                 @csrf
 
@@ -126,7 +126,7 @@
 
         <div class="modal-content bg-dark text-white">
 
-            <form method="POST" action="{{ route('columns.store') }}">
+            <form method="POST" action="{{ route('workspaces.columns.store', $workspace) }}">
 
                 @csrf
 

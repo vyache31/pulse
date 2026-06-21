@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WorkspaceController;
+use App\Http\Controllers\ColumnController;
+use App\Http\Controllers\TaskController;
 
 Route::get('/', function () {
     return view('layouts/public');
@@ -17,7 +19,8 @@ Route::middleware('auth')->group(function () {
 	Route::get('/home', function () {
     	return view('layouts/app');
 	})->name('app');
-
+	Route::resource('columns', ColumnController::class);
+	Route::resource('tasks', TaskController::class);
 });
 
 require __DIR__.'/auth.php';

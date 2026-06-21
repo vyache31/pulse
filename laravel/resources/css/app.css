@@ -1,3 +1,6 @@
+
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,38 +8,145 @@
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 
-@theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
-}
-
 body {
-    font-family: 'Inter', sans-serif;
+    background: #0f1115;
+    color: #e5e7eb;
 }
 
-.nav-links a {
-    color: rgba(255,255,255,0.75);
+.sidebar {
+    width: 280px;
+    min-height: 100vh;
+
+    background: rgba(20, 22, 28, 0.55);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+
+    box-shadow: 10px 0 30px rgba(0, 0, 0, 0.35);
+
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.sidebar a {
+    color: #cbd5e1;
     text-decoration: none;
-    font-weight: 500;
-    padding: 10px 12px;
-    transition: 0.2s ease;
-    font-size: 20px;
-}
-
-.nav-links a:hover {
-    color: white;
-    transform: translateY(-1px);
-}	
-
-.hero {
-    height: 100vh;
-    background-image: url('../images/home-background.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-a:hover {
-    opacity: 1;
+    display: block;
+    padding: 6px 10px;
+    border-radius: 10px;
     transition: 0.2s;
+}
+
+.sidebar a:hover {
+    color: #fff;
+    background: rgba(255,255,255,0.06);
+}
+
+.user-dropdown-btn {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    border: 1px solid rgba(255,255,255,0.10);
+    color: #e5e7eb;
+
+    border-radius: 14px;
+    padding: 8px 14px;
+
+    transition: 0.2s ease;
+}
+
+.user-dropdown-btn:hover {
+    background: rgba(255, 255, 255, 0.10);
+    transform: translateY(-1px);
+}
+
+.dropdown-menu {
+    background: rgba(20, 22, 28, 0.85);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.dropdown-item {
+    color: #e5e7eb;
+    transition: 0.2s;
+}
+
+.dropdown-item:hover {
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+}
+
+.kanban-board {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    overflow-x: auto;
+    padding-bottom: 20px;
+}
+
+.kanban-column {
+    min-width: 300px;
+    max-width: 300px;
+
+    background: rgba(255,255,255,0.04);
+    backdrop-filter: blur(16px);
+
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+
+    padding: 15px;
+}
+
+.task-card {
+    background: rgba(255,255,255,0.06);
+
+    border-radius: 12px;
+
+    padding: 12px;
+    margin-bottom: 10px;
+
+    cursor: pointer;
+}
+
+.add-column-card {
+    min-width: 300px;
+    height: 120px;
+
+    border: 2px dashed rgba(255,255,255,0.15);
+
+    background: rgba(255,255,255,0.03);
+
+    border-radius: 20px;
+
+    color: white;
+    font-size: 20px;
+
+    transition: 0.2s;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-column-card:hover {
+    background: rgba(255,255,255,0.06);
+}
+
+.workspace-form-card {
+    background: rgba(255,255,255,0.04);
+
+    backdrop-filter: blur(16px);
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    border-radius: 24px;
+
+    padding: 30px;
 }

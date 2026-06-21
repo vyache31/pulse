@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.nav-links a {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 10px 12px;
+    transition: 0.2s ease;
+    font-size: 20px;
+}
+
+.nav-links a:hover {
+    color: white;
+    transform: translateY(-1px);
+}	
+
+.hero {
+    height: 100vh;
+    background-image: url('../images/home-background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+a:hover {
+    opacity: 1;
+    transition: 0.2s;
+}

@@ -6,102 +6,50 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     @vite(['resources/css/app.css'])
-
-    <style>
-        body {
-            background: #0f1115;
-            color: #e5e7eb;
-        }
-
-        .sidebar {
-            width: 280px;
-            min-height: 100vh;
-
-            background: rgba(20, 22, 28, 0.65);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-
-            border-right: 1px solid rgba(255, 255, 255, 0.06);
-        }
-
-        .sidebar a {
-            color: #cbd5e1;
-            text-decoration: none;
-        }
-
-        .sidebar a:hover {
-            color: #ffffff;
-        }
-
-        .topbar {
-            background: rgba(20, 22, 28, 0.65);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        }
-
-        .dropdown-menu {
-            background: #1a1d24;
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-
-        .dropdown-item {
-            color: #e5e7eb;
-        }
-
-        .dropdown-item:hover {
-            background: rgba(255,255,255,0.06);
-            color: #fff;
-        }
-    </style>
 </head>
 
 <body>
+	
+	<div class="d-flex">
 
-<div class="d-flex">
+    	<div class="sidebar p-3">
 
-    <!-- Sidebar -->
-    <div class="sidebar p-3">
+        	<div class="sidebar-section">
 
-        <h4 class="mb-4">
-            <a href="/home" class="text-white text-decoration-none">
-                Pulse
-            </a>
-        </h4>
+    			<div class="d-flex justify-content-between align-items-center">
+        			<span>Workspaces</span>
 
-        <a href="/workspaces" class="d-block mb-2">
-            Workspaces
-        </a>
+        				<a href="{{ route('workspaces.create') }}"
+           					class="workspace-add-btn">
+           					+
+        				</a>
+    			</div>
 
-        @foreach(auth()->user()->workspaces as $workspace)
-            <a href="/workspaces/{{ $workspace->id }}" class="d-block ms-2 mb-1">
-                {{ $workspace->name }}
-            </a>
-        @endforeach
+    		<div class="workspace-list mt-2">
+        		@foreach(auth()->user()->workspaces as $workspace)
+            		<a href="{{ route('workspaces.show', $workspace) }}">
+                		{{ $workspace->name }}
+            		</a>
+        		@endforeach
+    		</div>
 
+		</div>
     </div>
 
-    <!-- Main -->
     <div class="flex-grow-1">
 
-        <!-- Topbar -->
-        <div class="topbar d-flex justify-content-end p-3">
+        <div class="d-flex justify-content-end p-3">
 
             <div class="dropdown">
-                <button class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown">
+                <button class="user-dropdown-btn dropdown-toggle"
+                        data-bs-toggle="dropdown">
                     {{ auth()->user()->username }}
                 </button>
 
-                <ul class="dropdown-menu dropdown-menu-end">
+                <ul class="dropdown-menu dropdown-menu-end mt-2">
 
-                    <li>
-                        <a class="dropdown-item" href="/profile">Профиль</a>
-                    </li>
-
-                    <li>
-                        <a class="dropdown-item" href="/settings">Настройки</a>
-                    </li>
+                    <li><a class="dropdown-item" href="/profile">Профиль</a></li>
+                    <li><a class="dropdown-item" href="/settings">Настройки</a></li>
 
                     <li><hr class="dropdown-divider"></li>
 

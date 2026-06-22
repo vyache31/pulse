@@ -6,6 +6,7 @@ use App\Http\Controllers\WorkspaceController;
 use App\Http\Controllers\ColumnController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\Auth\GitHubController;
+use App\Http\Controllers\WorkspaceMemberController;
 
 Route::get('/', function () {
     return view('layouts/public');
@@ -24,8 +25,10 @@ Route::middleware('auth')->group(function () {
 	Route::get('/home', function () {
     	return view('layouts/app');
 	})->name('app');
+	Route::resource('workspaces.workspace-members', WorkspaceMemberController::class);
 	Route::resource('workspaces.columns', ColumnController::class);
 	Route::resource('workspaces.columns.tasks', TaskController::class);
+	Route::get('/users/search', [UserController::class, 'search']);
 });
 
 require __DIR__.'/auth.php';

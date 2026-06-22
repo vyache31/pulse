@@ -71,6 +71,9 @@ class WorkspaceController extends Controller
     public function edit(Workspace $workspace)
     {
         $this->authorize('update', $workspace);
+		return view('workspace.edit', [
+			'workspace' => $workspace
+		]);
     }
 
     /**

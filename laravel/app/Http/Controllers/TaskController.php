@@ -79,7 +79,7 @@ class TaskController extends Controller
      */
     public function edit(Workspace $workspace, Column $column, Task $task)
     {
-        $this->authorize('update', $task);
+        $this->authorize('update', $workspace);
 
 		return view('task.edit', [
 			'workspace' => $workspace, 
@@ -93,7 +93,7 @@ class TaskController extends Controller
      */
     public function update(Request $request, Workspace $workspace, Column $column, Task $task)
     {
-        $this->authorize('update', $task);
+        $this->authorize('update', $workspace);
 		$data = $request->validate([
 			'title' => ['required', 'string', 'max:30'],
 			'description' => ['nullable', 'string', 'max:255'],

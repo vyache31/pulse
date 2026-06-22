@@ -28,9 +28,9 @@ class ColumnPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user, Workspace $workspace): bool
+    public function create(User $user, Column $column): bool
     {
-        return $user->roleInWorkspace($workspace) !== null;
+        return $user->roleInWorkspace($column->workspace) !== null;
     }
 
     /**

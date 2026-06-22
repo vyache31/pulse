@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use App\Models\Column;
+use App\Models\Workspace;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -19,38 +20,46 @@ class TaskController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Workspace $workspace, Column $column)
     {
-        //
+        $this->authorize('create', $column);
+
+		return view('task.create', [
+			'workspace' => $workspace,
+			'column' => $column
+		]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, Column $column)
+    public function store(Request $request, Workspace $workspace, Column $column)
     {
 		$this->authorize('create', $column);
 		
+        $data = $request->validate([
+			'title' => ['required', 'string', 'max:30'],
+			'description' => ['nullable', 'string', 'max:255'],
+			'tags' => ['nullable', 'string', 'max:255'],
+			'assigned_to' => ['nullable', 'integer'],
+		]);
+
 		$tags = collect(explode(',', $request->tags))
 			->map(fn ($tag) => trim($tag))
 			->filter()
 			->values()
 			->all();
 
-        $data = $request->validate([
-			'title' => ['required', 'string', 'max:30'],
-			'description' => ['nullable', 'string', 'max:255'],
-			'tags' => ['nullable', 'array', 'max:10'],
-			'tags.*' => ['string', 'max:15'],
-		]);
-
 		$column->tasks()->create([
 			'title' => $data['title'],
 			'description' => $data['description'],
 			'tags' => $tags ?? [],
+			'assigned_to' => $data['assigned_to'] ?? null,
 		]);
 
-		return back();
+		return redirect()->route('workspaces.show', [
+			'workspace' => $workspace
+		]);
     }
 
     /**
@@ -59,43 +68,68 @@ class TaskController extends Controller
     public function show(Task $task)
     {
         $this->authorize('view', $task);
+
+		return view('task.show', [
+			'task' => $task
+		]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Task $task)
+    public function edit(Workspace $workspace, Column $column, Task $task)
     {
         $this->authorize('update', $task);
+
+		return view('task.edit', [
+			'workspace' => $workspace, 
+			'column' => $column,
+			'task' => $task
+		]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Task $task)
+    public function update(Request $request, Workspace $workspace, Column $column, Task $task)
     {
         $this->authorize('update', $task);
 		$data = $request->validate([
 			'title' => ['required', 'string', 'max:30'],
 			'description' => ['nullable', 'string', 'max:255'],
-			'tags' => ['nullable', 'array', 'max:10'],
-			'tags.*' => ['string', 'max:15'],
+			'tags' => ['nullable', 'string', 'max:255'],
+			'assigned_to' => ['nullable', 'integer'],
 		]);
 
-		$task->update($data);
+		$tags = collect(explode(',', $request->tags))
+			->map(fn ($tag) => trim($tag))
+			->filter()
+			->values()
+			->all();
 
-		return back();
+		$task->update([
+			'title' => $data['title'],
+			'description' => $data['description'],
+			'tags' => $tags,
+			'assigned_to' => $data['assigned_to'] ?? null,	
+		]);
+
+		return redirect()->route('workspaces.show', [
+			'workspace' => $workspace
+		]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Task $task)
+    public function destroy(Workspace $workspace, Column $column, Task $task)
     {
         $this->authorize('delete', $task);
         $task->delete();
 
-		return back();
+		return redirect()->route('workspaces.show', [
+			'workspace' => $workspace
+		]);
 
     }
 }

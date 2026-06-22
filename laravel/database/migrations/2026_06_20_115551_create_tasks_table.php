@@ -17,8 +17,8 @@ return new class extends Migration
 	    $table->string('title');
 	    $table->string('description');
 	    $table->json('tags')->nullable();
-	    $table->foreignId('assigned_to')->constrained('users');
-            $table->timestamps();
+	    $table->foreignId('assigned_to')->nullable()->constrained('users');
+        $table->timestamps();
         });
     }
 

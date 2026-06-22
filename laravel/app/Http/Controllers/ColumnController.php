@@ -19,9 +19,13 @@ class ColumnController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Workspace $workspace)
     {
-        //
+        $this->authorize('create', $workspace);
+
+		return view('column.create', [
+			'workspace' => $workspace
+		]);
     }
 
     /**
@@ -42,7 +46,9 @@ class ColumnController extends Controller
 			'position' => $lastColumnIndex + 1,
 		]);
 
-		return back();
+		return view('workspace.show', [
+			'workspace' => $workspace
+		]);
     }
 
     /**
@@ -56,9 +62,14 @@ class ColumnController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Column $column)
+    public function edit(Workspace $workspace, Column $column)
     {
         $this->authorize('update', $column);
+
+		return view('column.edit', [
+			'workspace' => $workspace,
+			'column' => $column
+		]);
     }
 
     /**
@@ -74,17 +85,21 @@ class ColumnController extends Controller
 
 		$column->update($data);
 
-		return back();
+		return view('workspace.show', [
+			'workspace' => $workspace
+		]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Column $column)
+    public function destroy(Workspace $workspace, Column $column)
     {
 		$this->authorize('delete', $column);
         $column->delete();
 
-		return back();
+		return view('workspace.show', [
+			'workspace' => $workspace
+		]);
     }
 }

@@ -17,6 +17,10 @@ class Task extends Model
 		'assigned_to'
     ];
 
+	protected $casts = [
+        'tags' => 'array',
+    ];
+
     public function column(): BelongsTo
     {
 	return $this->belongsTo(Column::class);

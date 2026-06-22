@@ -27,9 +27,23 @@
 
     		<div class="workspace-list mt-2">
         		@foreach(auth()->user()->workspaces as $workspace)
-            		<a href="{{ route('workspaces.show', $workspace) }}">
-                		{{ $workspace->name }}
-            		</a>
+            		<div class="workspace-header d-flex align-items-center justify-content-between px-3 mb-3">
+
+    					<a
+							href="{{ route('workspaces.show', $workspace) }}"
+							class="text-white mb-0">
+        					{{ $workspace->name }}
+    					</a>
+
+    					<a
+        					href="{{ route('workspaces.edit', $workspace) }}"
+        					class="workspace-settings-btn"
+        					title="Настройки workspace"
+    					>
+       						 ⚙
+    					</a>
+
+					</div>
         		@endforeach
     		</div>
 

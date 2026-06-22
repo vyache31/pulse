@@ -1,0 +1,57 @@
+server {
+    server_name pulse.vyache.space;
+ 
+    root /home/student/projects/pulse/laravel/public;
+    index index.php;
+ 
+    access_log /var/log/nginx/pulse-access.log;
+    error_log  /var/log/nginx/pulse-error.log;
+
+    location /phpmyadmin/ {
+        root /usr/share;
+        index index.php;
+
+        location ~ \.php$ {
+            fastcgi_pass unix:/var/run/php/php-fpm.sock;
+            include fastcgi_params;
+            fastcgi_param SCRIPT_FILENAME $request_filename;
+        }
+    }
+
+ 
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+	
+    location ~ \.php$ {
+    include fastcgi_params;
+    fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    }
+
+    location ~* \.(css|js|png|jpg|jpeg|gif|ico|svg)$ {
+	expires 7d;
+	add_header Cache-Control "public, no-transform";
+    }
+
+
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/pulse.vyache.space/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/pulse.vyache.space/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+server {
+    if ($host = pulse.vyache.space) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    server_name pulse.vyache.space;
+    listen 80;
+    return 404; # managed by Certbot
+
+
+}

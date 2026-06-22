@@ -53,3 +53,4 @@
 3. Create/edit/delete колонку
 4. Create/edit/delete задачу (название, описание, теги, исполнитель из участников)
 # Структура БД
+![Схема](src/images/pulse.svg)

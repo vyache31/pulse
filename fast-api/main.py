@@ -6,23 +6,46 @@ from fastapi import FastAPI, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
 from routers import ws
 from database import db_execute
+from datetime import datetime
 
 from auth import get_current_user
 
 async def redis_subscriber():
-    redis = await aioredis.from_url('redis://127.0.0.1:6379')
-    pubsub = redis.pubsub()
-
-    async for message in pubsub.listen():
-        if message['type'] != 'message': continue
-
-        channel = message['channel'].decode()
-        data = json.loads(message['data'])
-
-        if channel == 'new_task':
-            await ws.manager.broadcast({
-                'type': 'new_task', 'post': data
-            })
+    while True:
+        try:
+            client = redis.from_url(
+                'redis://127.0.0.1:6379',
+                socket_connect_timeout=5,
+                socket_keepalive=True,
+                socket_timeout=None,
+                decode_responses=False
+            )
+            pubsub = client.pubsub()
+            await pubsub.subscribe('new_task', 'updated_task', 'deleted_task')
+            print('SUB for new_task, updated_task, deleted_task')
+            
+            async for message in pubsub.listen():
+                if message['type'] != 'message':
+                    continue
+                print("receive message")
+                channel = message['channel'].decode()
+                data = json.loads(message['data'])
+                await ws.manager.broadcast({
+                        'type': channel,
+                        'post': data
+                    })
+        except asyncio.CancelledError:
+            print("Subscriber cancelled")
+            break
+        except Exception as e:
+            print(f"Subscriber error: {e}")
+            await asyncio.sleep(3)
+            continue
+        finally:
+            try:
+                await client.close()
+            except:
+                pass
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -30,7 +53,7 @@ async def lifespan(app: FastAPI):
     yield
     task.cancel()
 
-app = FastAPI(title='Boardy API', version='0.5.0', lifespan=lifespan)
+app = FastAPI(title='Pulse API', version='0.5.0', lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,

@@ -20,6 +20,7 @@ class ConnectionManager:
         dead = []
         for ws in self.active:
             try:
+                print("LOG: send ws msg!")
                 await ws.send_text(json.dumps(message))
             except:
                 dead.append(ws)

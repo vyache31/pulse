@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Models\Column;
 use App\Models\Workspace;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 class TaskController extends Controller
 {
@@ -50,11 +51,25 @@ class TaskController extends Controller
 			->values()
 			->all();
 
-		$column->tasks()->create([
+		$task = $column->tasks()->create([
 			'title' => $data['title'],
 			'description' => $data['description'],
 			'tags' => $tags ?? [],
 			'assigned_to' => $data['assigned_to'] ?? null,
+		]);
+
+		Redis::connection()->executeRaw([
+			'PUBLISH',
+			'new_task',
+			json_encode([
+			'workspace_id' => $workspace->id,
+			'column_id' => $column->id,
+			'id' => $task->id,
+			'title' => $task->title,
+			'description' => $task->description,
+			'tags' => $task->tags,
+			'assigned_to' => $task->doer->username,
+			])
 		]);
 
 		return redirect()->route('workspaces.show', [
@@ -114,6 +129,21 @@ class TaskController extends Controller
 			'assigned_to' => $data['assigned_to'] ?? null,	
 		]);
 
+		Redis::connection()->executeRaw([
+			'PUBLISH',
+			'updated_task',
+			json_encode([
+			'workspace_id' => $workspace->id,
+			'column_id' => $column->id,
+			'id' => $task->id,
+			'title' => $task->title,
+			'description' => $task->description,
+			'tags' => $task->tags,
+			'assigned_to' => $task->doer->username,
+			])
+		]);
+
+
 		return redirect()->route('workspaces.show', [
 			'workspace' => $workspace
 		]);
@@ -124,8 +154,19 @@ class TaskController extends Controller
      */
     public function destroy(Workspace $workspace, Column $column, Task $task)
     {
-        $this->authorize('delete', $task);
+        $this->authorize('delete', $workspace);
         $task->delete();
+
+		Redis::connection()->executeRaw([
+			'PUBLISH',
+			'deleted_task',
+			json_encode([
+			'workspace_id' => $workspace->id,
+			'column_id' => $column->id,
+			'id' => $task->id,
+			])
+		]);
+
 
 		return redirect()->route('workspaces.show', [
 			'workspace' => $workspace

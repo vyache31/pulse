@@ -46,5 +46,9 @@ COPY --from=frontend /app/public/build /var/www/html/public/build
 RUN chown -R www-data:www-data storage bootstrap/cache public/build
 RUN chmod -R 775 storage bootstrap/cache public/build
 
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
 EXPOSE 9000
+ENTRYPOINT ["entrypoint.sh"]
 CMD ["php-fpm"]

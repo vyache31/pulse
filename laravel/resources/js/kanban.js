@@ -5,7 +5,15 @@
         return;
     }
 
-    const ws = new WebSocket('wss://api.pulse.vyache.space/ws');
+    const hostParts = window.location.host.split('.');
+    const wsHost = hostParts.length > 2
+        ? `api.${hostParts.slice(1).join('.')}`
+        : `api.${window.location.host}`;
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss://' : 'ws://';
+    const wsUrl = `${wsProtocol}${wsHost}/ws`;
+
+    console.log('WebSocket URL:', wsUrl);
+    const ws = new WebSocket(wsUrl);
 
     ws.onopen = () => console.log('WebSocket connected');
     ws.onerror = (err) => console.error(err);

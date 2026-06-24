@@ -81,48 +81,66 @@
 
 @push('scripts')
 <script>
-let timer = null;
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('userSearch');
+    const resultsContainer = document.getElementById('searchResults');
+    let timer = null;
+    let currentRequest = null;
 
-document.getElementById('userSearch').addEventListener('input', function () {
-
-    clearTimeout(timer);
-
-    timer = setTimeout(async () => {
-
+    searchInput.addEventListener('input', function () {
+        clearTimeout(timer);
         const q = this.value.trim();
 
         if (q.length < 2) {
-            document.getElementById('searchResults').innerHTML = '';
+            resultsContainer.innerHTML = '';
             return;
         }
 
-        const res = await fetch(`/users/search?q=${q}`);
-        const users = await res.json();
+        resultsContainer.innerHTML = '<div class="text-muted">Поиск...</div>';
 
-        const html = users.map(u => `
-            <div class="d-flex justify-content-between align-items-center p-2 mb-1"
-                 style="background: rgba(255,255,255,0.04); border-radius: 10px;">
+        timer = setTimeout(async () => {
+            try {
+                if (currentRequest) {
+                    currentRequest.abort();
+                }
+                currentRequest = new AbortController();
 
-                <div class="text-white">${u.username}</div>
+                const res = await fetch(
+                    `/users/search?q=${encodeURIComponent(q)}&workspace_id={{ $workspace->id }}`,
+                    { signal: currentRequest.signal }
+                );
 
-                <form method="POST"
-      				action="/workspaces/{{ $workspace->id }}/workspace-members">
+                if (!res.ok) throw new Error('Ошибка сети');
 
-   		 			<input type="hidden" name="_token" value="{{ csrf_token() }}">
-    				<input type="hidden" name="user_id" value="${u.id}">
-    				<input type="hidden" name="role" value="member">
+                const users = await res.json();
 
-    				<button class="btn btn-sm btn-primary">
-        				добавить
-    				</button>
-				</form>
-            </div>
-        `).join('');
+                if (users.length === 0) {
+                    resultsContainer.innerHTML = '<div class="text-muted">Пользователи не найдены</div>';
+                    return;
+                }
 
-        document.getElementById('searchResults').innerHTML = html;
+                const html = users.map(u => `
+                    <div class="d-flex justify-content-between align-items-center p-2 mb-1"
+                         style="background: rgba(255,255,255,0.04); border-radius: 10px;">
+                        <div class="text-white">${u.username}</div>
+                        <form method="POST"
+                              action="{{ route('workspaces.workspace-members.store', $workspace) }}">
+                            @csrf
+                            <input type="hidden" name="user_id" value="${u.id}">
+                            <input type="hidden" name="role" value="member">
+                            <button class="btn btn-sm btn-primary">добавить</button>
+                        </form>
+                    </div>
+                `).join('');
 
-    }, 300);
-
+                resultsContainer.innerHTML = html;
+            } catch (error) {
+                if (error.name === 'AbortError') return;
+                console.error(error);
+                resultsContainer.innerHTML = '<div class="text-danger">Ошибка загрузки</div>';
+            }
+        }, 300);
+    });
 });
 </script>
 @endpush

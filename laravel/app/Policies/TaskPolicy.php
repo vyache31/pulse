@@ -12,9 +12,9 @@ class TaskPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user, Workspace $workspace): bool
+    public function viewAny(User $user, Task $task): bool
     {
-        return $user->roleInWorkspace($workspace) !== null;
+        return $user->roleInWorkspace($task->column->workspace) !== null;
     }
 
     /**
@@ -22,13 +22,13 @@ class TaskPolicy
      */
     public function view(User $user, Task $task): bool
     {
-        return $user->roleInWorkspace($task->workspace()) !== null;
+        return $user->roleInWorkspace($task->column->workspace) !== null;
     }
 
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user, $workspace): bool
+    public function create(User $user, Workspace $workspace): bool
     {
         return $user->roleInWorkspace($workspace) !== null;
     }
@@ -36,17 +36,17 @@ class TaskPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Workspace $workspace): bool
+    public function update(User $user, Task $task): bool
     {
-        return $user->roleInWorkspace($workspace) !== null;
+        return $user->roleInWorkspace($task->column->workspace) !== null;
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Workspace $workspace): bool
+    public function delete(User $user, Task $task): bool
     {
-        return $user->roleInWorkspace($workspace) !== null;
+        return $user->roleInWorkspace($task->column->workspace) !== null;
     }
 
     /**

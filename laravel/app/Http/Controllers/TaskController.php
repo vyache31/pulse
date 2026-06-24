@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Models\Column;
 use App\Models\Workspace;
 use Illuminate\Http\Request;
+use App\Policies\TaskPolicy;
 use Illuminate\Support\Facades\Redis;
 
 class TaskController extends Controller
@@ -23,7 +24,7 @@ class TaskController extends Controller
      */
     public function create(Workspace $workspace, Column $column)
     {
-        $this->authorize('create', $column);
+        $this->authorize('create', [Task::class, $workspace]);
 
 		return view('task.create', [
 			'workspace' => $workspace,
@@ -36,7 +37,7 @@ class TaskController extends Controller
      */
     public function store(Request $request, Workspace $workspace, Column $column)
     {
-		$this->authorize('create', $column);
+		$this->authorize('create', [Task::class, $workspace]);
 		
         $data = $request->validate([
 			'title' => ['required', 'string', 'max:30'],
@@ -94,7 +95,7 @@ class TaskController extends Controller
      */
     public function edit(Workspace $workspace, Column $column, Task $task)
     {
-        $this->authorize('update', $workspace);
+        $this->authorize('update', $task);
 
 		return view('task.edit', [
 			'workspace' => $workspace, 
@@ -108,7 +109,7 @@ class TaskController extends Controller
      */
     public function update(Request $request, Workspace $workspace, Column $column, Task $task)
     {
-        $this->authorize('update', $workspace);
+        $this->authorize('update', $task);
 		$data = $request->validate([
 			'title' => ['required', 'string', 'max:30'],
 			'description' => ['nullable', 'string', 'max:255'],
@@ -154,7 +155,7 @@ class TaskController extends Controller
      */
     public function destroy(Workspace $workspace, Column $column, Task $task)
     {
-        $this->authorize('delete', $workspace);
+        $this->authorize('delete', $task);
         $task->delete();
 
 		Redis::connection()->executeRaw([

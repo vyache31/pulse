@@ -68,7 +68,7 @@ class TaskController extends Controller
 			'title' => $task->title,
 			'description' => $task->description,
 			'tags' => $task->tags,
-			'assigned_to' => $task->doer->username,
+			'assigned_to' => $task->doer->username ?? null,
 			])
 		]);
 
@@ -139,7 +139,7 @@ class TaskController extends Controller
 			'title' => $task->title,
 			'description' => $task->description,
 			'tags' => $task->tags,
-			'assigned_to' => $task->doer->username,
+			'assigned_to' => $task->doer->username ?? null,
 			])
 		]);
 

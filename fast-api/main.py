@@ -21,9 +21,11 @@ async def redis_subscriber():
                 decode_responses=False
             )
             pubsub = client.pubsub()
-            await pubsub.subscribe('new_task', 'updated_task', 'deleted_task')
-            print('SUB for new_task, updated_task, deleted_task')
-            
+            await pubsub.subscribe(
+                  'new_task', 'updated_task', 'deleted_task',
+                  'new_column', 'updated_column', 'deleted_column')
+            print("SUB for new_task, updated_task, deleted_task, new_column, updated_column, deleted_column")
+
             async for message in pubsub.listen():
                 if message['type'] != 'message':
                     continue

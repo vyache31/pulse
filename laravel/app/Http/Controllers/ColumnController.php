@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Column;
 use App\Models\Workspace;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 class ColumnController extends Controller
 {
@@ -41,10 +42,22 @@ class ColumnController extends Controller
 		$lastColumnIndex = $workspace->columns()
 			->max('position');
 
-		$workspace->columns()->create([
+		$column = $workspace->columns()->create([
 			'title' => $data['title'],
 			'position' => $lastColumnIndex + 1,
 		]);
+
+		Redis::connection()->executeRaw([
+			'PUBLISH',
+			'new_column',
+			json_encode([
+			'workspace_id' => $workspace->id,
+			'id' => $column->id,
+			'title' => $column->title,
+			'position' =>$column->position,
+			])
+		]);
+
 
 		return view('workspace.show', [
 			'workspace' => $workspace
@@ -84,6 +97,18 @@ class ColumnController extends Controller
 		]);
 
 		$column->update($data);
+		
+		Redis::connection()->executeRaw([
+			'PUBLISH',
+			'updated_column',
+			json_encode([
+			'workspace_id' => $workspace->id,
+			'id' => $column->id,
+			'title' => $column->title,
+			'position' =>$column->position,
+			])
+		]);
+
 
 		return view('workspace.show', [
 			'workspace' => $workspace
@@ -97,6 +122,15 @@ class ColumnController extends Controller
     {
 		$this->authorize('delete', $column);
         $column->delete();
+
+		Redis::connection()->executeRaw([
+			'PUBLISH',
+			'deleted_column',
+			json_encode([
+			'workspace_id' => $workspace->id,
+			'id' => $column->id,
+			])
+		]);
 
 		return view('workspace.show', [
 			'workspace' => $workspace
